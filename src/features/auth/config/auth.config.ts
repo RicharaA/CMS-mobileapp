@@ -13,7 +13,7 @@ export const authConfig = {
         "offline_access",
     ],
 
-    redirectURI: AuthSession.makeRedirectUri({
+    makeRedirectUri: AuthSession.makeRedirectUri({
         scheme: "student-management",
         path: "oauthredirect",
     }),
