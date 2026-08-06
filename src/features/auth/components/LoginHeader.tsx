@@ -1,4 +1,4 @@
-import { View, Text, Image } from "react-native";
+import { Image, Text, View } from "react-native";
 
 export function LoginHeader() {
   return (
@@ -14,6 +14,10 @@ export function LoginHeader() {
       </Text>
 
       <Text className="text-base text-gray-500 dark:text-gray-400 mt-2">
+        Welcome back
+      </Text>
+
+      <Text className="text-sm text-gray-400 dark:text-gray-500 mt-1">
         Sign in to continue
       </Text>
     </View>
