@@ -1,0 +1,66 @@
+import { ReactNode, useEffect, useState } from "react";
+
+import { useAuthContext } from "../context/AuthContext";
+import {
+  getDiscovery,
+  getUserProfile,
+} from "../services/auth.service";
+import {
+  getToken,
+  removeToken,
+} from "../storage/auth.storage";
+import { AuthTokens } from "../types/auth.types";
+
+interface AuthGateProps {
+  children: ReactNode;
+}
+
+export function AuthGate({ children }: AuthGateProps) {
+  const auth = useAuthContext();
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function restoreSession() {
+      try {
+        const stored = await getToken();
+
+        if (!stored) {
+          return;
+        }
+
+        const tokens: AuthTokens = JSON.parse(stored);
+
+        if (tokens.expiresAt <= Date.now()) {
+          await removeToken();
+          return;
+        }
+
+        const discovery = await getDiscovery();
+
+        const user = await getUserProfile(
+          tokens.accessToken,
+          discovery
+        );
+
+        auth.setAuth(user, tokens);
+
+        console.log("Session restored.");
+
+      } catch (error) {
+        await removeToken();
+        console.error("Failed to restore session:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    restoreSession();
+  }, [auth]);
+
+  if (loading) {
+    return null;
+  }
+
+  return <>{children}</>;
+}

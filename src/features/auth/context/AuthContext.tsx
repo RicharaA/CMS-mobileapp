@@ -1,9 +1,9 @@
 import {
   createContext,
+  ReactNode,
   useContext,
   useMemo,
   useState,
-  ReactNode,
 } from "react";
 
 import { AuthState } from "../types/auth.types";
@@ -11,6 +11,13 @@ import { AuthState } from "../types/auth.types";
 interface AuthContextType extends AuthState {
   login: () => Promise<void>;
   logout: () => Promise<void>;
+
+  setAuth: (
+    user: AuthState["user"],
+    tokens: AuthState["tokens"]
+  ) => void;
+
+  clearAuth: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -23,6 +30,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<AuthState["user"]>(null);
   const [tokens, setTokens] = useState<AuthState["tokens"]>(null);
 
+  function setAuth(
+    user: AuthState["user"],
+    tokens: AuthState["tokens"]
+  ) {
+    setUser(user);
+    setTokens(tokens);
+  }
+
+  function clearAuth() {
+    setUser(null);
+    setTokens(null);
+  }
+
   const value = useMemo(
     () => ({
       user,
@@ -32,6 +52,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       login: async () => {},
 
       logout: async () => {},
+
+      setAuth,
+
+      clearAuth,
     }),
     [user, tokens]
   );
@@ -47,7 +71,9 @@ export function useAuthContext() {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error("useAuthContext must be used within AuthProvider");
+    throw new Error(
+      "useAuthContext must be used within AuthProvider"
+    );
   }
 
   return context;
