@@ -10,12 +10,6 @@
     "ios": {
       "icon": "./assets/expo.icon"
     },
-    "extra": {
-      "dashboardApiUrl": "http://192.168.10.48:8000/api/v1",
-      "userApiUrl": "http://192.168.10.48:8001/api/v1",
-      "authServerUrl": "http://192.168.10.48:8001",
-      "oidcClientId": "react-client"
-    },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",

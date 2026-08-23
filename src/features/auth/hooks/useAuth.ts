@@ -1,9 +1,11 @@
 import * as AuthSession from "expo-auth-session";
 import { useEffect } from "react";
+import { router } from "expo-router";
 
 import {authConfig} from "../config/auth.config";
 import { exchangeCode,getUserProfile } from "../services/auth.service";
 import { useAuthContext } from "@/features/auth/context/AuthContext";
+
 
 export function useAuth() {
     const auth = useAuthContext();
@@ -28,11 +30,20 @@ export function useAuth() {
     }
 
     useEffect(() =>{
-        if(!response) return;
+       console.log("AUTH RESPONSE:", response);
 
-        if(response.type !== "success"){
-            return;
-        }
+    if (!response) {
+        console.log("No auth response yet");
+        return;
+    }
+
+    console.log("AUTH RESPONSE TYPE:", response.type);
+    
+
+    if (response.type !== "success") {
+        console.log("OAuth did not succeed:", response);
+        return;
+    }
 
         const code = response.params.code;
         if(!code) {
@@ -66,8 +77,13 @@ export function useAuth() {
 
             auth.setAuth(user, tokens);
 
+            console.log("========== LOGIN SUCCESS ==========");
             console.log("User:", user);
-            console.log("Tokens:", tokens);
+            console.log("Tokens received:", !!tokens);
+            console.log("Navigating to /dashboard");
+            console.log("===================================");
+
+            router.replace("/dashboard");
 
         } catch (error) {
         console.error("Login failed:", error);

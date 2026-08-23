@@ -42,7 +42,7 @@ export function LoginButton() {
         <ActivityIndicator color="white" />
       ) : (
         <Text className="text-white text-base font-semibold">
-          Sign in with SSO
+          Login
         </Text>
       )}
     </Pressable>
