@@ -1,5 +1,5 @@
-import { Text, View } from "react-native";
 import Constants from "expo-constants";
+import { Text, View } from "react-native";
 
 export function LoginFooter() {
   const version = Constants.expoConfig?.version ?? "1.0.0";
@@ -11,7 +11,7 @@ export function LoginFooter() {
       </Text>
 
       <Text className="text-xs text-gray-400 mt-1">
-        © 2026 Student Management
+        © 2026 MetaHorizon College
       </Text>
     </View>
   );

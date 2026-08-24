@@ -56,7 +56,7 @@ export function AuthGate({ children }: AuthGateProps) {
     }
 
     restoreSession();
-  }, [auth]);
+  }, []);
 
   if (loading) {
     return null;

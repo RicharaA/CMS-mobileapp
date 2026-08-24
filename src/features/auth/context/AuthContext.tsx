@@ -49,9 +49,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       tokens,
       isAuthenticated: tokens !== null,
 
-      login: async () => {},
+      login: async () => { },
 
-      logout: async () => {},
+      logout: async () => { },
 
       setAuth,
 

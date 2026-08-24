@@ -1,21 +1,15 @@
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  Text,
-} from "react-native";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 
 import { useAuth } from "../hooks/useAuth";
 
 export function LoginButton() {
   const { login } = useAuth();
-
   const [loading, setLoading] = useState(false);
 
   async function handleLogin() {
     try {
       setLoading(true);
-
       await login();
     } catch (error) {
       console.error("Login failed:", error);
@@ -28,21 +22,32 @@ export function LoginButton() {
     <Pressable
       onPress={handleLogin}
       disabled={loading}
-      className={`
-        h-14
-        rounded-xl
-        items-center
-        justify-center
-        bg-blue-600
-        active:bg-blue-700
-        disabled:opacity-50
-      `}
+      style={{
+        width: "100%",
+        height: 48,
+        borderRadius: 6,
+        backgroundColor: "#2563eb",
+        alignItems: "center",
+        justifyContent: "center",
+        opacity: loading ? 0.7 : 1,
+      }}
     >
       {loading ? (
-        <ActivityIndicator color="white" />
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <ActivityIndicator color="white" style={{ marginRight: 8 }} />
+          <Text style={{ color: "#ffffff", fontSize: 15, fontWeight: "600" }}>
+            Redirecting...
+          </Text>
+        </View>
       ) : (
-        <Text className="text-white text-base font-semibold">
-          Login
+        <Text
+          style={{
+            color: "#ffffff",
+            fontSize: 15,
+            fontWeight: "600",
+          }}
+        >
+          Log In
         </Text>
       )}
     </Pressable>

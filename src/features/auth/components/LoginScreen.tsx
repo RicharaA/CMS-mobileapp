@@ -1,46 +1,43 @@
-import { Pressable, Text, View } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { LoginButton } from "./LoginButton";
 import { LoginFooter } from "./LoginFooter";
 import { LoginHeader } from "./LoginHeader";
 
-import { removeToken } from "@/features/auth/storage/auth.storage";
-
 export function LoginScreen() {
-  async function handleDeleteToken() {
-    await removeToken();
-    console.log("Stored token deleted");
-  }
-
   return (
-    <SafeAreaView className="flex-1 bg-black dark:bg-black">
-      <View className="flex-1 px-8 justify-between">
-
-        <View className="flex-1 justify-center">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#e6f0fa" }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          paddingHorizontal: 24,
+        }}
+      >
+        {/* Card */}
+        <View
+          style={{
+            backgroundColor: "#ffffff",
+            borderRadius: 12,
+            paddingTop: 55,
+            paddingBottom: 40,
+            paddingHorizontal: 32,
+            width: "100%",
+            maxWidth: 340,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.05,
+            shadowRadius: 20,
+            elevation: 10,
+            alignItems: "center",
+          }}
+        >
           <LoginHeader />
-
           <LoginButton />
-
-          <Pressable className="mt-6">
-            <Text className="text-center text-blue-600 font-medium">
-              Forgot Password?
-            </Text>
-          </Pressable>
-
-          {/* Temporary debugging button */}
-          <Pressable
-            onPress={handleDeleteToken}
-            className="mt-6 rounded-lg bg-red-600 py-3"
-          >
-            <Text className="text-center font-medium text-white">
-              Delete Stored Token
-            </Text>
-          </Pressable>
         </View>
-
         <LoginFooter />
-
       </View>
     </SafeAreaView>
   );
