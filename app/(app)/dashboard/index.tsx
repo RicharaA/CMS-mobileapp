@@ -1,132 +1,147 @@
+import { Menu, ShieldCheck, Users, Megaphone, CreditCard } from "lucide-react-native";
+import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+import Sidebar from "@/features/navigation/components/Sidebar";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { removeToken } from "@/features/auth/storage/auth.storage";
+import { RoleGuard } from "@/features/auth/components/RoleGuard";
+import { useRouter } from "expo-router";
 
 export default function DashboardScreen() {
-  const { logout } = useAuth();
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const { user, primaryRole, isAdmin, isStudent } = useAuth();
+  const router = useRouter();
 
-  const handleLogout = async () => {
-    await removeToken();
-    await logout();
-  };
+  const userName = user?.name || user?.preferred_username || user?.email || (isAdmin ? "Admin User" : "Student");
 
   return (
     <SafeAreaView className="flex-1 bg-[#F8F9FA]">
-      <ScrollView
-        className="flex-1"
-        contentContainerClassName="px-[14px] pb-8"
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Header */}
-        <View className="mb-5 mt-3 flex-row justify-between items-center">
-          <View>
-            <Text className="text-xs font-medium text-gray-500">
-              Welcome back
-            </Text>
+      <View className="flex-1">
 
-            <Text className="mt-1 text-2xl font-bold text-[#1E293B]">
+        {/* Header */}
+        <View className="h-[54px] flex-row items-center justify-between border-b border-gray-200 bg-white px-4">
+          <View className="flex-row items-center">
+            <Pressable
+              onPress={() => setSidebarVisible(true)}
+              className="mr-3 h-9 w-9 items-center justify-center rounded-lg"
+            >
+              <Menu size={21} color="#334155" />
+            </Pressable>
+
+            <Text className="text-[15px] font-semibold text-[#1E293B]">
               Dashboard
             </Text>
           </View>
 
-          <Pressable 
-            onPress={handleLogout}
-            className="px-4 py-2 bg-red-100 rounded-lg"
-          >
-            <Text className="text-red-600 font-semibold text-sm">Logout</Text>
-          </Pressable>
-        </View>
-
-        {/* User Card */}
-        <View className="mb-5 overflow-hidden rounded-[14px] bg-[#7B3446] p-5">
-          <Text className="text-xs font-medium text-white/70">
-            Logged in as
-          </Text>
-
-          <Text className="mt-2 text-xl font-bold text-white">
-            User
-          </Text>
-
-          <Text className="mt-1 text-xs text-white/70">
-            Administrator
-          </Text>
-        </View>
-
-        {/* Stats */}
-        <View className="gap-3">
-          {/* Students */}
-          <View className="h-[68px] flex-row items-center justify-between rounded-xl border border-gray-200 bg-white px-3">
-            <View>
-              <Text className="text-[8px] font-medium tracking-wide text-gray-500">
-                TOTAL STUDENTS
-              </Text>
-
-              <Text className="mt-1 text-lg font-bold text-[#1E293B]">
-                248
-              </Text>
-            </View>
-
-            <View className="h-9 w-9 items-center justify-center rounded-lg bg-[#F0EAFF]">
-              <Text className="text-lg text-[#8B5CF6]">♙</Text>
-            </View>
-          </View>
-
-          {/* Courses */}
-          <View className="h-[68px] flex-row items-center justify-between rounded-xl border border-gray-200 bg-white px-3">
-            <View>
-              <Text className="text-[8px] font-medium tracking-wide text-gray-500">
-                COURSES
-              </Text>
-
-              <Text className="mt-1 text-lg font-bold text-[#1E293B]">
-                18
-              </Text>
-            </View>
-
-            <View className="h-9 w-9 items-center justify-center rounded-lg bg-[#E2F7F0]">
-              <Text className="text-lg text-[#10B981]">▱</Text>
-            </View>
+          <View className="flex-row items-center rounded-full bg-[#7B3446]/10 px-3 py-1">
+            <ShieldCheck size={14} color="#7B3446" className="mr-1.5" />
+            <Text className="text-xs font-bold text-[#7B3446] uppercase">
+              {primaryRole}
+            </Text>
           </View>
         </View>
 
-        {/* Quick Actions */}
-        <Text className="mb-3 mt-6 text-base font-bold text-[#1E293B]">
-          Quick Actions
-        </Text>
-
-        <View className="gap-3">
-          <Pressable className="rounded-xl border border-gray-200 bg-white p-4">
-            <Text className="text-[15px] font-semibold text-[#1E293B]">
-              Students
+        <ScrollView
+          className="flex-1"
+          contentContainerClassName="px-5 pb-8"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Welcome Banner */}
+          <View className="mt-6">
+            <Text className="text-sm text-gray-500">
+              Welcome back
             </Text>
 
-            <Text className="mt-1 text-xs text-gray-500">
-              Manage student records
+            <Text className="mt-1 text-2xl font-bold text-[#1E293B]">
+              {userName}
             </Text>
-          </Pressable>
+          </View>
 
-          <Pressable className="rounded-xl border border-gray-200 bg-white p-4">
-            <Text className="text-[15px] font-semibold text-[#1E293B]">
-              Enrollments
+          {/* STUDENT Specific Section */}
+          <RoleGuard allowedRoles={["STUDENT", "USER"]}>
+            <View className="mt-6 rounded-2xl border border-gray-200 bg-white p-5">
+              <View className="flex-row items-center justify-between">
+                <Text className="text-sm font-medium text-gray-500">
+                  Fee Balance
+                </Text>
+                <CreditCard size={18} color="#64748B" />
+              </View>
+
+              <Text className="mt-2 text-3xl font-bold text-[#1E293B]">
+                Rs. 30,000
+              </Text>
+
+              <Text className="mt-1 text-sm text-gray-500">
+                Remaining tuition & campus balance
+              </Text>
+            </View>
+          </RoleGuard>
+
+          {/* ADMIN / STAFF Specific Section */}
+          <RoleGuard allowedRoles={["ADMIN", "STAFF"]}>
+            <View className="mt-6 rounded-2xl border border-gray-200 bg-[#7B3446] p-5">
+              <View className="flex-row items-center justify-between">
+                <Text className="text-sm font-medium text-white/80">
+                  Admin Control Panel
+                </Text>
+                <ShieldCheck size={20} color="#FFFFFF" />
+              </View>
+
+              <Text className="mt-2 text-xl font-bold text-white">
+                Management System
+              </Text>
+
+              <Text className="mt-1 text-xs text-white/70">
+                Full administrative access to student records and announcements
+              </Text>
+
+              <View className="mt-4 flex-row gap-3">
+                <Pressable
+                  onPress={() => router.push("/students")}
+                  className="flex-1 flex-row items-center justify-center rounded-xl bg-white/20 py-2.5 px-3 active:bg-white/30"
+                >
+                  <Users size={16} color="#FFFFFF" className="mr-2" />
+                  <Text className="text-xs font-semibold text-white">Students</Text>
+                </Pressable>
+
+                <Pressable
+                  onPress={() => router.push("/announcements")}
+                  className="flex-1 flex-row items-center justify-center rounded-xl bg-white/20 py-2.5 px-3 active:bg-white/30"
+                >
+                  <Megaphone size={16} color="#FFFFFF" className="mr-2" />
+                  <Text className="text-xs font-semibold text-white">Announce</Text>
+                </Pressable>
+              </View>
+            </View>
+          </RoleGuard>
+
+          {/* Latest Announcement (All Roles) */}
+          <View className="mt-4 rounded-2xl border border-gray-200 bg-white p-5">
+            <View className="flex-row items-center justify-between">
+              <Text className="text-base font-bold text-[#1E293B]">
+                Latest Announcement
+              </Text>
+              <Megaphone size={18} color="#7B3446" />
+            </View>
+
+            <Text className="mt-3 text-sm font-semibold text-gray-800">
+              Examination Schedule
             </Text>
 
-            <Text className="mt-1 text-xs text-gray-500">
-              Manage student enrollments
+            <Text className="mt-1 text-sm leading-5 text-gray-500">
+              The examination schedule has been published.
             </Text>
-          </Pressable>
+          </View>
+        </ScrollView>
 
-          <Pressable className="rounded-xl border border-gray-200 bg-white p-4">
-            <Text className="text-[15px] font-semibold text-[#1E293B]">
-              Users
-            </Text>
+        {/* Sidebar */}
+        <Sidebar
+          visible={sidebarVisible}
+          onClose={() => setSidebarVisible(false)}
+        />
 
-            <Text className="mt-1 text-xs text-gray-500">
-              Manage system users and roles
-            </Text>
-          </Pressable>
-        </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }

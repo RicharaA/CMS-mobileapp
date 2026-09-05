@@ -2,17 +2,22 @@ export const ENDPOINTS = {
     AUTH: {
         LOGIN: "/auth/login",
         LOGOUT: "/auth/logout",
-        REFRESH: "auth/refresh",
+        REFRESH: "/auth/refresh",
     },
     STUDENTS: {
         BASE: "/students",
-        BY_ID: (id:string) => `/students/${id}`,
+        ME: "/students/me",
     },
     ENROLLMENTS: {
         BASE: "/enrollments",
-        BY_ID: (id:string) => `/enrollments/${id}`,
+        BY_ID: (id: string) => `/enrollments/${id}`,
     },
-    PROFILE: {
-        ME: "/profile",
+    ANNOUNCEMENTS: {
+        BASE: "/announcements",
+        BY_ID: (id: string) => `/announcements/${id}`,
+    },
+    FEE: {
+        BASE: "/fees",
+        BY_ID: (id: string) => `/fees/${id}`,
     },
 }
