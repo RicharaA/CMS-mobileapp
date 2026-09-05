@@ -1,11 +1,15 @@
 import * as AuthSession from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
 import { router } from "expo-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useAuthContext } from "@/features/auth/context/AuthContext";
 import { authConfig } from "../config/auth.config";
-import { exchangeCode, getUserProfile } from "../services/auth.service";
+import {
+    exchangeCode,
+    getUserProfile,
+} from "../services/auth.service";
+
 
 export function useAuth() {
     const auth = useAuthContext();
@@ -26,19 +30,33 @@ export function useAuth() {
             discovery
         );
 
-    // Prevent the same OAuth authorization code
-    // from being exchanged more than once.
+    // Prevent duplicate OAuth response processing
     const isProcessingRef = useRef(false);
 
+    // Prevent multiple OAuth sessions from starting
+    const isLoginActiveRef = useRef(false);
+
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
+
     async function login() {
-        if (!request) {
-            console.log(
-                "Authorization request is not ready yet."
-            );
+        if (!request || isLoginActiveRef.current) {
             return;
         }
 
-        await promptAsync();
+        isLoginActiveRef.current = true;
+        setIsLoggingIn(true);
+
+        try {
+            await promptAsync();
+        } catch (error) {
+            console.error(
+                "Failed to start OAuth login:",
+                error
+            );
+        } finally {
+            isLoginActiveRef.current = false;
+            setIsLoggingIn(false);
+        }
     }
 
     useEffect(() => {
@@ -62,8 +80,7 @@ export function useAuth() {
             return;
         }
 
-        // Prevent duplicate processing of the same
-        // authorization response.
+        // Prevent duplicate processing
         if (isProcessingRef.current) {
             console.log(
                 "OAuth response already being processed. Skipping."
@@ -121,6 +138,8 @@ export function useAuth() {
                     discoveryDocument
                 );
 
+
+
                 console.log(
                     "Authorization code exchanged successfully."
                 );
@@ -139,10 +158,7 @@ export function useAuth() {
                     discoveryDocument
                 );
 
-                console.log(
-                    "User profile received:",
-                    user
-                );
+
 
                 auth.setAuth(user, tokens);
 
@@ -151,6 +167,7 @@ export function useAuth() {
                 );
 
                 console.log("User:", user);
+
                 console.log(
                     "Tokens received:",
                     !!tokens
@@ -165,14 +182,17 @@ export function useAuth() {
                 );
 
                 router.replace("/dashboard");
-            } catch (error) {
-                console.error(
-                    "Login failed:",
-                    error
-                );
 
-                // Allow another login attempt if
-                // something went wrong.
+            } catch (error: any) {
+                console.error("========== LOGIN FAILED ==========");
+
+                console.error("MESSAGE:", error?.message);
+                console.error("STATUS:", error?.response?.status);
+                console.error("DATA:", error?.response?.data);
+                console.error("URL:", error?.config?.url);
+
+                console.error("==================================");
+
                 isProcessingRef.current = false;
             }
         }
@@ -182,8 +202,12 @@ export function useAuth() {
 
     async function logout() {
         if (!discovery?.endSessionEndpoint) {
-            console.log("No end session endpoint found");
-            auth.clearAuth();
+            console.log(
+                "No end session endpoint found"
+            );
+
+            await auth.clearAuth();
+            router.replace("/login");
             return;
         }
 
@@ -191,18 +215,42 @@ export function useAuth() {
             const params = new URLSearchParams();
 
             if (auth.tokens?.idToken) {
-                params.set("id_token_hint", auth.tokens.idToken);
+                params.set(
+                    "id_token_hint",
+                    auth.tokens.idToken
+                );
             }
 
-            const endSessionUrl = `${discovery.endSessionEndpoint}?${params.toString()}`;
+            if (authConfig.clientId) {
+                params.set(
+                    "client_id",
+                    authConfig.clientId
+                );
+            }
 
-            console.log("Opening end session URL:", endSessionUrl);
+            const endSessionUrl =
+                `${discovery.endSessionEndpoint}?${params.toString()}`;
 
-            await WebBrowser.openAuthSessionAsync(endSessionUrl, null);
+            console.log(
+                "Opening end session URL:",
+                endSessionUrl
+            );
+
+            await WebBrowser.openAuthSessionAsync(
+                endSessionUrl,
+                authConfig.redirectUri
+            );
+
         } catch (error) {
-            console.error("Failed to clear browser session:", error);
+            console.error(
+                "Failed to clear browser session:",
+                error
+            );
+
         } finally {
-            auth.clearAuth();
+            WebBrowser.dismissBrowser();
+            await auth.clearAuth();
+            router.replace("/login");
         }
     }
 
@@ -210,5 +258,6 @@ export function useAuth() {
         ...auth,
         login,
         logout,
+        isLoggingIn,
     };
 }

@@ -17,4 +17,5 @@ export interface NavigationItem {
     label: string;
     route: Href;
     icon: LucideIcon;
+    roles?: string[];
 }

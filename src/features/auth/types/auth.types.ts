@@ -6,6 +6,8 @@ export interface AuthTokens {
     tokenType: string;
 }
 
+export type UserRole = "ADMIN" | "STUDENT" | "STAFF" | "USER";
+
 export interface UserProfile {
     sub: string;
     name?: string;
@@ -13,10 +15,13 @@ export interface UserProfile {
     given_name?: string;
     family_name?: string;
     preferred_username?: string;
+    roles?: string[];
 }
 
 export interface AuthState {
-    isAuthenticated :boolean;
-    user : UserProfile | null;
-    tokens : AuthTokens | null;
+    isAuthenticated: boolean;
+    user: UserProfile | null;
+    tokens: AuthTokens | null;
+    roles: string[];
+    primaryRole: UserRole;
 }

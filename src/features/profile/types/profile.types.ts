@@ -1,17 +1,13 @@
 export interface StudentProfile {
+    id: string;
+    username: string;
     fullName: string;
     email: string;
-    phoneNumber: string;
     dateOfBirth: string;
+    phoneNumber: string;
+    presentAddress: string;
     gender: string;
-
-    program: string;
-    semester: number;
-    enrollmentYear: number;
-
-    fee: {
-        total: number;
-        paid: number;
-        remaining: number;
-    };
+    guardianName: string;
+    guardianPhoneNumber: string;
+    guardianRelation: string;
 }
