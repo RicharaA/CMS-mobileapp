@@ -59,24 +59,7 @@ export default function DashboardScreen() {
           </View>
 
           {/* STUDENT Specific Section */}
-          <RoleGuard allowedRoles={["STUDENT", "USER"]}>
-            <View className="mt-6 rounded-2xl border border-gray-200 bg-white p-5">
-              <View className="flex-row items-center justify-between">
-                <Text className="text-sm font-medium text-gray-500">
-                  Fee Balance
-                </Text>
-                <CreditCard size={18} color="#64748B" />
-              </View>
 
-              <Text className="mt-2 text-3xl font-bold text-[#1E293B]">
-                Rs. 30,000
-              </Text>
-
-              <Text className="mt-1 text-sm text-gray-500">
-                Remaining tuition & campus balance
-              </Text>
-            </View>
-          </RoleGuard>
 
           {/* ADMIN / STAFF Specific Section */}
           <RoleGuard allowedRoles={["ADMIN", "STAFF"]}>
@@ -115,7 +98,35 @@ export default function DashboardScreen() {
               </View>
             </View>
           </RoleGuard>
+          {/* Quick Access */}
+          <View className="mt-6">
+            <Text className="mb-3 text-base font-bold text-[#1E293B]">
+              Quick Access
+            </Text>
 
+            <Pressable
+              onPress={() => router.push("/profile")}
+              className="flex-row items-center rounded-2xl border border-gray-200 bg-white p-4 active:bg-gray-50"
+            >
+              <View className="h-11 w-11 items-center justify-center rounded-xl bg-[#7B3446]/10">
+                <Users size={21} color="#7B3446" />
+              </View>
+
+              <View className="ml-3 flex-1">
+                <Text className="text-sm font-bold text-[#1E293B]">
+                  My Profile
+                </Text>
+
+                <Text className="mt-1 text-xs text-gray-500">
+                  View your personal and account information
+                </Text>
+              </View>
+
+              <Text className="text-lg text-gray-400">
+                ›
+              </Text>
+            </Pressable>
+          </View>
           {/* Latest Announcement (All Roles) */}
           <View className="mt-4 rounded-2xl border border-gray-200 bg-white p-5">
             <View className="flex-row items-center justify-between">
@@ -126,13 +137,14 @@ export default function DashboardScreen() {
             </View>
 
             <Text className="mt-3 text-sm font-semibold text-gray-800">
-              Examination Schedule
+              Will be published
             </Text>
 
             <Text className="mt-1 text-sm leading-5 text-gray-500">
-              The examination schedule has been published.
+              Under Development
             </Text>
           </View>
+
         </ScrollView>
 
         {/* Sidebar */}

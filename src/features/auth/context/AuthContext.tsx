@@ -80,9 +80,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
   };
 
-  const isAdmin = primaryRole === "ADMIN" || hasRole("ADMIN") || hasRole("ROLE_ADMIN");
-  const isStudent = primaryRole === "STUDENT" || hasRole("STUDENT") || hasRole("ROLE_STUDENT");
-  const isStaff = primaryRole === "STAFF" || hasRole("STAFF") || hasRole("ROLE_STAFF");
+  const isAdmin = primaryRole === "ADMIN" || hasRole("ADMIN");
+  const isStudent = primaryRole === "STUDENT" || hasRole("STUDENT");
+  const isStaff = primaryRole === "STAFF" || hasRole("STAFF");
 
   const value = useMemo(
     () => ({

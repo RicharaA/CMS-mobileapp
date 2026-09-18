@@ -58,11 +58,7 @@ export function UserAccountProfile({
                         value={roles.length > 0 ? roles.join(", ") : primaryRole}
                     />
 
-                    <DetailRow
-                        icon={<CheckCircle2 size={18} color="#16A34A" />}
-                        label="Account Status"
-                        value="Active & Verified"
-                    />
+
                 </View>
             </View>
         </View>

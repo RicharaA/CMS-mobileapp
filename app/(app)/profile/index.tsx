@@ -12,8 +12,8 @@ import { Menu } from "lucide-react-native";
 
 import { ProfileHeader } from "@/features/profile/components/ProfileHeader";
 import { PersonalInfo } from "@/features/profile/components/PersonalInfo";
-import { AcademicInfo } from "@/features/profile/components/AcademicInfo";
-import { FeeProfile } from "@/features/profile/components/FeeProfile";
+// import { AcademicInfo } from "@/features/profile/components/AcademicInfo";
+// import { FeeProfile } from "@/features/profile/components/FeeProfile";
 import { UserAccountProfile } from "@/features/profile/components/UserAccountProfile";
 import Sidebar from "@/features/navigation/components/Sidebar";
 
@@ -106,8 +106,8 @@ export default function ProfileScreen() {
             <View className="mt-6">
               <ProfileHeader profile={profile} />
               <PersonalInfo profile={profile} />
-              <AcademicInfo profile={profile} />
-              <FeeProfile profile={profile} />
+              {/* <AcademicInfo profile={profile} /> */}
+              {/* <FeeProfile profile={profile} /> */}
             </View>
           ) : (
             <UserAccountProfile
