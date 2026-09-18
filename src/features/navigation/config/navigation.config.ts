@@ -17,11 +17,13 @@ export const navigationItems: NavigationItem[] = [
         label: "Profile",
         route: "/profile",
         icon: User,
+        roles: ["ADMIN", "STAFF", "STUDENT", "USER"]
     },
     {
         label: "Announcements",
         route: "/announcements",
         icon: Megaphone,
+        roles: ["ADMIN", "STUDENT", "USER", "STAFF"]
     },
     {
         label: "Students List",
@@ -33,6 +35,6 @@ export const navigationItems: NavigationItem[] = [
         label: "Enrollments",
         route: "/enrollments",
         icon: BookOpen,
-        roles: ["STUDENT", "ADMIN", "STAFF"],
+        roles: ["ADMIN", "STAFF"],
     },
 ];

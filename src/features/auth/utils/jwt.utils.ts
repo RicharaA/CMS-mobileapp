@@ -53,6 +53,7 @@ export function extractRoles(
   // 1. Inspect Access Token payload
   if (tokens?.accessToken) {
     const accessPayload = decodeJwtPayload(tokens.accessToken);
+    console.log("ACCESS TOKEN PAYLOAD:", accessPayload);
     if (accessPayload) {
       addRoles(accessPayload.roles);
       addRoles(accessPayload.authorities);
@@ -63,6 +64,7 @@ export function extractRoles(
   // 2. Inspect ID Token payload
   if (tokens?.idToken) {
     const idPayload = decodeJwtPayload(tokens.idToken);
+    console.log("ID TOKEN PAYLOAD:", idPayload);
     if (idPayload) {
       addRoles(idPayload.roles);
       addRoles(idPayload.authorities);
@@ -75,7 +77,7 @@ export function extractRoles(
     addRoles(userProfile.roles);
     addRoles((userProfile as any).authorities);
   }
-
+  console.log("FINAL EXTRACTED ROLES:", Array.from(roleSet));
   return Array.from(roleSet);
 }
 
@@ -109,5 +111,5 @@ export function determinePrimaryRole(roles: string[]): UserRole {
     return "STUDENT";
   }
 
-  return "USER";
+  return "STUDENT";
 }

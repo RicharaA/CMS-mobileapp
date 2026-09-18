@@ -1,6 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, RefreshControl, ScrollView } from "react-native";
+import {
+    View,
+    Text,
+    RefreshControl,
+    ScrollView,
+} from "react-native";
 
 import { AnnouncementList } from "@/features/announcements/components/AnnouncementList";
 import { getAnnouncements } from "@/features/announcements/services/announcement.services";
@@ -12,7 +17,7 @@ export default function AnnouncementsScreen() {
     const [refreshing, setRefreshing] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    async function loadAnnouncements() {
+    const loadAnnouncements = useCallback(async () => {
         try {
             setError(null);
 
@@ -30,9 +35,9 @@ export default function AnnouncementsScreen() {
         } finally {
             setLoading(false);
         }
-    }
+    }, []);
 
-    async function handleRefresh() {
+    const handleRefresh = async () => {
         setRefreshing(true);
 
         try {
@@ -40,11 +45,11 @@ export default function AnnouncementsScreen() {
         } finally {
             setRefreshing(false);
         }
-    }
+    };
 
     useEffect(() => {
         loadAnnouncements();
-    }, []);
+    }, [loadAnnouncements]);
 
     return (
         <SafeAreaView className="flex-1 bg-[#F8F9FA]">
@@ -58,7 +63,8 @@ export default function AnnouncementsScreen() {
                     />
                 }
             >
-                <View className="mt-6 mb-6">
+                {/* Header */}
+                <View className="mb-6 mt-6">
                     <Text className="text-2xl font-bold text-[#1E293B]">
                         Announcements
                     </Text>
@@ -68,6 +74,7 @@ export default function AnnouncementsScreen() {
                     </Text>
                 </View>
 
+                {/* Content */}
                 {error ? (
                     <View className="rounded-2xl bg-white p-6">
                         <Text className="text-center text-sm text-red-500">

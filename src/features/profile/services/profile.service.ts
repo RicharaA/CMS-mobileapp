@@ -5,18 +5,8 @@ import { StudentProfile } from "@/features/profile/types/profile.types";
 
 export async function getStudentProfile(): Promise<StudentProfile> {
     try {
-        console.log(
-            "BASE URL:",
-            api.defaults.baseURL
-        );
-
-        console.log(
-            "REQUEST URL:",
-            `${api.defaults.baseURL}/students/me`
-        );
-
         const response = await api.get<StudentProfile>(
-            "/students/me"
+            ENDPOINTS.STUDENTS.ME
         );
 
         console.log(
